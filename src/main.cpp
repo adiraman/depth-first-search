@@ -1,5 +1,6 @@
 #include "../include/depthFirstSearch.h"
 #include "../include/undirected_graph.h"
+#include "../include/directed_graph.h"
 
 template <typename T>
 void printVec(const T& elems)
@@ -52,6 +53,21 @@ int main()
     printVec(t5);
     std::cout << " Recursive Traversal from node 0 " << std::endl;
     printVec(t6);
+    std::cout << std::endl;
+
+    directed_graph g1;
+    g1.addEdge(0, 1);
+    g1.addEdge(0, 2);
+    g1.addEdge(1, 3);
+    g1.addEdge(2, 3);
+    std::cout << g1 << std::endl;
+    g1.writeDot("graph2.dot");
+
+    depthFirstSearch dfs1(g1);
+
+    std::cout << "Topological order of G1" << std::endl;
+    auto t7 = dfs1.topologicalSort();
+    printVec(t7);
     std::cout << std::endl;
 
     return 0;

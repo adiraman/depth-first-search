@@ -1,7 +1,7 @@
 #include "../include/depthFirstSearch.h"
 #include <stack>
 
-depthFirstSearch::depthFirstSearch(const undirected_graph& g)
+depthFirstSearch::depthFirstSearch(const graph& g)
 {
     m_adjacencyList = g.getAdjacencyList();
 }
@@ -66,4 +66,39 @@ std::vector<int> depthFirstSearch::recursiveTraversal(int s)
         visitedNodes[node.first] = false;
     }
     return rTs(s, visitedNodes, traversalOrder);
+}
+
+std::vector<int> depthFirstSearch::topologicalSort()
+{
+    std::map<int, bool> visitedNodes;
+    std::stack<int> labels;
+    std::vector<int> topologicalOrder;
+    for (auto node : m_adjacencyList) {
+        visitedNodes[node.first] = false;
+    }
+    for (auto v : m_adjacencyList) {
+        if (!visitedNodes[v.first]) {
+            tps(v.first, visitedNodes, labels);
+        }
+    }
+
+    while (!labels.empty()) {
+        topologicalOrder.push_back(labels.top());
+        labels.pop();
+    }
+
+    return topologicalOrder;
+}
+
+void depthFirstSearch::tps(int s, std::map<int, bool>& visitedNodes, std::stack<int>& labels)
+{
+    visitedNodes[s] = true;
+
+    for (auto v : m_adjacencyList[s]) {
+        if (!visitedNodes[v]) {
+            tps(v, visitedNodes, labels);
+        }
+    }
+
+    labels.push(s);
 }

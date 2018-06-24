@@ -1,5 +1,5 @@
-#ifndef UNDIRECTED_GRAPH_H
-#define UNDIRECTED_GRAPH_H
+#ifndef DIRECTED_GRAPH_H
+#define DIRECTED_GRAPH_H
 
 #include "../include/graph.h"
 #include <algorithm>
@@ -13,7 +13,7 @@
 
 /*
  * A basic implementation of an adjacency list representation
- * for an undirected graph. The adjacency list is implemented
+ * for a directed graph. The adjacency list is implemented
  * as a std::map with the keys being the vertices and the value pair
  * being the std::set of unique connected vertices.
  *
@@ -24,13 +24,13 @@
  * (4) Helper functions to get a list of edges.
  */
 
-class undirected_graph : public graph {
+class directed_graph : public graph {
 public:
-    undirected_graph() = default;
+    directed_graph() = default;
 
-    undirected_graph(int vertices);
+    directed_graph(int vertices);
 
-    virtual ~undirected_graph() = default;
+    virtual ~directed_graph() = default;
 
     virtual void addVertex(int vertex) override;
 
@@ -52,7 +52,7 @@ public:
 
     virtual std::map<int, std::set<int>> getAdjacencyList() const override;
 
-    friend std::ostream& operator<<(std::ostream& oss, const undirected_graph& graph);
+    friend std::ostream& operator<<(std::ostream& oss, const directed_graph& graph);
 
 private:
     std::map<int, std::set<int>> m_adjList;

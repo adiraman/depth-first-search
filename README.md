@@ -19,3 +19,9 @@ Recursive Algorithm :-
 2.  for every vertex v adjacent to s:
 3.    if v is unexplored
 4.      recurse on v
+
+Application :- Topological Ordering of a directed acyclic graph
+
+Motivation in sequencing tasks with a given precedence constraints.
+
+NOTE:- no topological ordering exists for a directed cyclic graph.
