@@ -20,8 +20,12 @@ Recursive Algorithm :-
 3.    if v is unexplored
 4.      recurse on v
 
-Application :- Topological Ordering of a directed acyclic graph
+Application :- Topological Ordering of a directed acyclic graph.
+Topological sorting is a linear ordering of the vertices such that
+for every directed edge (u, v), vertex u comes before v in the
+ordering.
+NOTE:- Topological sorting for a graph is not possible if it is not
+a Directed Acyclic Graph (DAG).
 
 Motivation in sequencing tasks with a given precedence constraints.
 
-NOTE:- no topological ordering exists for a directed cyclic graph.
