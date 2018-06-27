@@ -29,3 +29,10 @@ a Directed Acyclic Graph (DAG).
 
 Motivation in sequencing tasks with a given precedence constraints.
 
+Application :- Computing Strongly Connected Components of a Directed Graph.
+
+Kosaraju's 2 pass algorithm :-
+
+1.  Let Grev = G with all directed edges in reversed order.
+2.  Run DFS on Grev to discover the ordering in which the vertices finish traversal.
+3.  Run DFS on G in the reverse of the order computed in the above step to naturally discover the SCC's.
