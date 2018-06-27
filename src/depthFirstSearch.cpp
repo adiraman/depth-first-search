@@ -13,7 +13,6 @@ std::vector<int> depthFirstSearch::iterativeTraversal(int s)
     std::stack<int> bounds;
     std::vector<int> traversalOrder;
 
-    // a safer compliant container alternative to `std::vector<bool>`
     // mark all nodes to be unexplored and add the current node to
     // the explored bounds stack.
     std::map<int, bool> visited;
@@ -119,4 +118,112 @@ void depthFirstSearch::tps(int s, std::map<int, bool>& visitedNodes, std::stack<
     // push the current node on a temp stack after visiting all its
     // neighbours.
     labels.push(s);
+}
+
+std::map<int, std::vector<int>> depthFirstSearch::stronglyConnectedComponents()
+{
+    int nVertices = m_adjacencyList.size();
+    int t = 0; // to book-keep finishing times in 1st pass
+    int s = 0; // to book-keep leaders in 2nd pass
+    std::vector<int> finishingTimes(nVertices);
+    std::vector<int> leader(nVertices);
+
+    // mark all nodes as unexplored
+    std::map<int, bool> visitedNodes;
+    for (auto node : m_adjacencyList) {
+        visitedNodes[node.first] = false;
+    }
+
+    // container to keep track of the traversal order for the
+    // second pass of DFS.
+    std::vector<int> traversalOrder(nVertices);
+
+    // (1) Grev is the given graph G with all arcs reversed. Create
+    //     a reversed adjacency list based on the one that is given.
+    std::map<int, std::set<int>> Grev;
+    for (auto node : m_adjacencyList) {
+        for (auto adjNode : node.second) {
+            Grev[adjNode].emplace(node.first);
+        }
+    }
+
+    // (2) 1st pass, run DFS on Grev. ( can also run DFS on G with
+    //     going backwards along edges instead of forward ).
+    //     objective of the first pass is to compute the order in
+    //     which the nodes must be traversed in order to naturally
+    //     uncover the strongly Connected Components.
+    for (int i = 0; i < nVertices; ++i) {
+        if (!visitedNodes[i]) {
+            s = i;
+            firstPass(Grev, i, visitedNodes, finishingTimes, t);
+        }
+    }
+
+    // (3) 2nd pass, run DFS on G. process nodes in the decreasing
+    //     order of their finishing times and discover the SCC's
+    //     one by one. SCC's are the nodes with the same leader.
+
+    // order of traversal for the second pass
+    for (int i = 0; i < nVertices; ++i) {
+        traversalOrder[finishingTimes[i]] = i;
+    }
+
+    // reset the visitedNodes to false for the second pass.
+    for (auto node : m_adjacencyList) {
+        visitedNodes[node.first] = false;
+    }
+
+    // visit the vertices in the decreasing order of finishing times
+    for (int i = nVertices - 1; i >= 0; --i) {
+        if (!visitedNodes[traversalOrder[i]]) {
+            s = traversalOrder[i];
+            secondPass(traversalOrder[i], leader, visitedNodes, s);
+        }
+    }
+
+    // reconstruct the sccs from the leader
+    std::set<int> uniqueLeaders;
+    for (auto i : leader) {
+        uniqueLeaders.emplace(i);
+    }
+    std::map<int, std::vector<int>> scc;
+    int c = 0;
+    std::vector<int> temp;
+    for (auto l : uniqueLeaders) {
+        temp.clear();
+        for (unsigned int i = 0; i < leader.size(); ++i) {
+            if (leader[i] == l) {
+                temp.push_back(i);
+            }
+        }
+        scc.emplace(c, temp);
+        ++c;
+    }
+    return scc;
+}
+
+void depthFirstSearch::firstPass(std::map<int, std::set<int>>& grev, int node, std::map<int, bool>& visitedNodes, std::vector<int>& finishingTimes, int& t)
+{
+    // mark current node as explored
+    visitedNodes[node] = true;
+
+    // traverse the reverse graph starting from the start vertex
+    for (auto n : grev[node]) {
+        if (!visitedNodes[n]) {
+            firstPass(grev, n, visitedNodes, finishingTimes, t);
+        }
+    }
+    t++;
+    finishingTimes[node] = t;
+}
+
+void depthFirstSearch::secondPass(int n, std::vector<int>& leader, std::map<int, bool>& visitedNodes, int& s)
+{
+    visitedNodes[n] = true;
+    leader[n] = s;
+    for (auto node : m_adjacencyList[n]) {
+        if (!visitedNodes[node]) {
+            secondPass(node, leader, visitedNodes, s);
+        }
+    }
 }

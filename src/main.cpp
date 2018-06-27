@@ -1,6 +1,6 @@
 #include "../include/depthFirstSearch.h"
-#include "../include/undirected_graph.h"
 #include "../include/directed_graph.h"
+#include "../include/undirected_graph.h"
 
 template <typename T>
 void printVec(const T& elems)
@@ -55,11 +55,13 @@ int main()
     printVec(t6);
     std::cout << std::endl;
 
+    std::cout << "*********************************" << std::endl;
     directed_graph g1;
     g1.addEdge(0, 1);
     g1.addEdge(0, 2);
     g1.addEdge(1, 3);
     g1.addEdge(2, 3);
+    std::cout << "           Input Graph          " << std::endl;
     std::cout << g1 << std::endl;
     g1.writeDot("graph2.dot");
 
@@ -69,6 +71,41 @@ int main()
     auto t7 = dfs1.topologicalSort();
     printVec(t7);
     std::cout << std::endl;
+
+    std::cout << "*********************************" << std::endl;
+    directed_graph g2;
+    g2.addEdge(0, 1);
+    g2.addEdge(1, 4);
+    g2.addEdge(4, 0);
+    g2.addEdge(1, 2);
+    g2.addEdge(4, 5);
+    g2.addEdge(4, 8);
+    g2.addEdge(2, 3);
+    g2.addEdge(2, 6);
+    g2.addEdge(8, 5);
+    g2.addEdge(5, 9);
+    g2.addEdge(5, 10);
+    g2.addEdge(10, 9);
+    g2.addEdge(9, 8);
+    g2.addEdge(5, 6);
+    g2.addEdge(10, 7);
+    g2.addEdge(6, 3);
+    g2.addEdge(3, 7);
+    g2.addEdge(7, 6);
+    std::cout << "           Input Graph          " << std::endl;
+    std::cout << g2 << std::endl;
+    g2.writeDot("graph3.dot");
+
+    depthFirstSearch dfs2(g2);
+    auto scc = dfs2.stronglyConnectedComponents();
+
+    std::cout << "Strongly connected Components are " << std::endl;
+    for (auto i : scc) {
+        for (auto j : i.second) {
+            std::cout << j << ", ";
+        }
+        std::cout << std::endl;
+    }
 
     return 0;
 }

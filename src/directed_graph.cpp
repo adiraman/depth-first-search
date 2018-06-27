@@ -115,7 +115,7 @@ std::vector<int> directed_graph::getVertices() const
 
 std::map<int, std::set<int>> directed_graph::getAdjacencyList() const
 {
-	return m_adjList;
+    return m_adjList;
 }
 
 std::ostream& operator<<(std::ostream& oss, const directed_graph& graph)
